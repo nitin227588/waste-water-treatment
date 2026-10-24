@@ -1,86 +1,104 @@
 # Bacteria-Based Wastewater Treatment
 
-An early-stage research project exploring bacterial approaches to domestic and municipal wastewater treatment, supported by reproducible data analysis and clear documentation.
+Research documentation and a working Python tool for analyzing paired wastewater measurements.
 
-## Current status
+**Status:** v0.1.0 software prototype. The analyzer is tested on synthetic data; this repository does not yet contain experimental treatment results, external software validation, or measured adoption.
 
-This repository currently contains project documentation. Experimental datasets, analysis software, and validated treatment results have not yet been published here. The items below describe the proposed scope and development roadmap.
+## Start here
+
+| Resource | Purpose |
+| --- | --- |
+| [TOOL_GUIDE.md](TOOL_GUIDE.md) | Installation, data schema, calculations, outputs, and limitations |
+| [analyze.py](analyze.py) | Python command-line analyzer; no third-party dependencies |
+| [synthetic_measurements.csv](synthetic_measurements.csv) | Invented demonstration values; not experimental evidence |
+| [measurement_template.csv](measurement_template.csv) | Blank header for your own measurements |
+| [test_analyze.py](test_analyze.py) | 20 automated tests |
+| [LITERATURE_REVIEW.md](LITERATURE_REVIEW.md) | Cited narrative review and published observations |
+| [literature_data.csv](literature_data.csv) | Published summary data, separate from raw measurements |
+
+## Run the demonstration
+
+Requires Python 3.10 or newer. Download the repository, open a terminal in its folder, and run:
+
+```sh
+python analyze.py synthetic_measurements.csv --output demo_results --label "SYNTHETIC DEMONSTRATION - NOT EXPERIMENTAL RESULTS"
+```
+
+On Windows, use `py` instead of `python` if needed. Open `demo_results/report.html` in your browser. It works offline and includes tables, removal bars, raw replicate trajectories, and calculation notes.
+
+Expected synthetic example: treated COD mean removal **75%**, sample SD **7.071 percentage points**, and **2** defined replicate pairs. The control mean is 10%. These are verification values, not project findings. pH is plotted without a removal percentage.
+
+To run the tests:
+
+```sh
+python -m unittest -v test_analyze.py
+```
+
+Local validation: all 20 tests passed on Python 3.12. This is not a claim of external validation.
+
+## What the tool does
+
+- Validates required fields, finite values, supported units and parameters.
+- Pairs each replicate's latest measurement with its own time-zero baseline.
+- Calculates concentration removal without clipping negative values.
+- Keeps zero-baseline removal undefined and excludes pH from percentage calculations.
+- Normalizes supported concentration units across replicates for summaries.
+- Keeps controls and different endpoint times in separate summary groups.
+- Produces paired and summary CSVs, SVG plots, an offline HTML report, and SHA-256 provenance.
+- Refuses existing output paths, preserving earlier results.
+
+It does not perform significance tests, automatically subtract controls, infer causality, or assess water safety. Details and assumptions are in [the guide](TOOL_GUIDE.md).
 
 ## Project goal
 
-Investigate how bacterial treatment can contribute to pollutant removal and document treatment performance in a transparent, reproducible way. The long-term aim is to support research into affordable, sustainable wastewater treatment.
+Investigate how bacteria can support treatment of domestic and municipal wastewater and make the analysis and communication of treatment measurements more reproducible.
 
-## Research questions
+Research questions include how measured parameters change over treatment, how treated samples compare with controls, and how consistent the observations are across independent experimental replicates.
 
-- How do measured wastewater parameters change during treatment?
-- How does treatment performance compare with an appropriate untreated control?
-- How consistent are observations across independent experimental replicates?
-- Which limitations must be addressed before drawing conclusions about practical use?
+## Measurement design
 
-## Proposed measurements
+Possible measurements include COD, BOD5, suspended solids, and nitrogen/phosphorus concentrations, depending on the research design and equipment. Record analytical methods, units, sampling design, pH, temperature, and relevant reactor conditions.
 
-Measurements will depend on the experimental design and available equipment. Possible parameters include chemical oxygen demand (COD), biochemical oxygen demand (BOD), suspended solids, and nutrient concentrations. Temperature, pH, treatment duration, and relevant experimental conditions should accompany the results. No measurements are claimed as completed by this README.
+The analyzer uses one row per parameter, replicate, and time point. Required columns are:
 
-## Suggested data format
+```text
+experiment_id,treatment,replicate_id,time_h,parameter,value,unit
+```
 
-Use one row per measured parameter, sample, and time point. Preserve raw measurements separately from processed outputs.
+Use consistent analytical bases. Nutrient labels such as NH4-N and PO4-P mean concentration as N or P. Each series needs a time-zero measurement and at least one later point. Missing observations are not zero. See [TOOL_GUIDE.md](TOOL_GUIDE.md) before using experimental data.
 
-| Field | Description |
-| --- | --- |
-| experiment_id | Identifier linking records from one experiment |
-| sample_id | Unique sample identifier |
-| treatment | Treatment or control label |
-| replicate_id | Independent replicate identifier |
-| time_h | Elapsed time in hours |
-| parameter | Measured quantity, such as COD |
-| value | Recorded numerical measurement |
-| unit | Measurement unit, such as mg/L |
-| method | Analytical method or reference |
-| notes | Dilution, detection limit, or other qualifications |
+Published summary values in `literature_data.csv` cannot be analyzed as if they were paired raw measurements. Synthetic, published-summary, and experimental data must remain separate.
 
-Record missing observations explicitly; do not replace them with zero. Document whether nutrient concentrations are reported as the element or the full chemical species. Avoid including personal information or confidential sampling locations.
+## Calculations
 
-## Planned analysis
+Removal (%) = 100 × (1 − final / baseline).
 
-1. Check identifiers, units, missing values, and duplicate records.
-2. Compare matched initial and final measurements for the same parameter and experimental unit.
-3. Calculate concentration-based removal where the initial concentration is positive.
-4. Plot time courses and summarize independent replicates with sample counts and variability.
-5. Report control behavior, uncertainty, and deviations from the planned methods.
+Initial concentration must be positive for a defined removal percentage. Negative results indicate increased concentration and are retained. Summary percentages are means of defined replicate percentages; sample SD is reported when at least two values exist. Counts expose undefined pairs.
 
-### Removal calculation
+A concentration decrease alone does not establish degradation or mass removal. Volume changes, dilution, adsorption and sampling effects may require a mass balance. The formula does not apply to pH.
 
-Removal (%) = 100 × (C_initial - C_final) / C_initial
+## Roadmap
 
-Both concentrations must use the same units and analytical basis. An initial value of zero makes this calculation undefined. A negative result indicates an increase in measured concentration and should be reported rather than clipped. Concentration reduction alone does not establish pollutant destruction; volume changes, dilution, and transfer between phases may require a mass-balance assessment. This calculation is not appropriate for pH.
+- [x] Document the research goal and limitations.
+- [x] Add a cited literature review and separate published-summary dataset.
+- [x] Add a blank measurement template.
+- [x] Implement validation, paired removal calculations and summaries.
+- [x] Add synthetic data, SVG plots and an offline report.
+- [x] Test calculation edge cases and the end-to-end demonstration.
+- [ ] Add continuous integration and broader platform checks.
+- [ ] Validate with appropriately approved experimental datasets.
+- [ ] Gather feedback and document actual reuse.
+- [ ] Evaluate additional analytical methods when justified by real data.
 
-## Development roadmap
+## Research integrity and limitations
 
-- [x] Document the project purpose and current status
-- [ ] Add a blank data-entry template and data dictionary
-- [ ] Implement input validation and removal calculations
-- [ ] Add tests for missing values, incompatible units, and zero baselines
-- [ ] Add clearly labeled synthetic demonstration data
-- [ ] Produce reproducible example figures
-- [ ] Share experimental data and methods when approved for release
+Preserve raw measurements and document processing. Distinguish independent replicates from technical repeats. Report negative and inconclusive findings. Review AI-assisted code and writing against evidence. Only share data you have permission to release.
 
-## Reproducibility and research integrity
+This is research software, not a validated treatment product or a claim of regulatory compliance. It does not establish pathogen removal, drinking-water safety, or discharge suitability. Biological work should follow institutionally approved procedures and supervision.
 
-- Distinguish experimental results from synthetic examples.
-- Keep original data unchanged and document processing steps.
-- Record software versions and instructions alongside future analysis code.
-- Cite the analytical methods and literature used in each study.
-- Report inconclusive and negative results as well as positive findings.
-- Treat AI-assisted writing or code as a draft requiring researcher review.
+## Intended users and contribution
 
-## Scope and limitations
+The intended users are students and researchers organizing microbial wastewater treatment data. No adoption, savings, or environmental benefits are claimed as measured.
 
-This is a research documentation project, not a validated treatment product or a claim of regulatory compliance. Laboratory observations cannot establish drinking-water safety, pathogen removal, environmental discharge suitability, or commercial readiness without the relevant independent assessments. Biological work should follow the institution's approved procedures and supervision.
+Issues reporting calculation problems, unclear documentation, or reproducibility concerns are welcome. Include the expected behavior and a small nonconfidential example; label synthetic examples. Do not upload unpublished third-party data without permission.
 
-## Intended users and potential impact
-
-The intended audience includes students and researchers working on microbial wastewater treatment. The proposed contribution is an accessible framework for organizing measurements, checking calculations, and communicating findings. Adoption, cost savings, and environmental benefits have not yet been measured.
-
-## Contributions
-
-Suggestions on data structure, calculation checks, documentation, and reproducibility are welcome through repository issues. Include the problem, a reproducible example when relevant, and the expected improvement. Do not upload confidential or unpublished third-party data without permission.
