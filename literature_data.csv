@@ -1,1 +1,8 @@
-
+record_id,source_id,doi,metric,value,lower,upper,reported_plus_minus,unit,context,location,data_origin
+1,1,10.1007/s11356-017-0615-9,TP_removal,95.1,,,1.9,percent,mixed_municipal_dairy_after_upgrade,Treatment_efficiency_discussion,published_summary
+2,1,10.1007/s11356-017-0615-9,effluent_TN_before,19.2,,,1.9,mg/L,mixed_municipal_dairy,Treatment_efficiency_discussion,published_summary
+3,1,10.1007/s11356-017-0615-9,effluent_TN_after,11.7,,,0.8,mg/L,mixed_municipal_dairy,Treatment_efficiency_discussion,published_summary
+4,1,10.1007/s11356-017-0615-9,effluent_COD_decrease,67.4,,,,percent,before_after_effluent_comparison_NOT_removal,Treatment_efficiency_discussion,published_summary
+5,2,10.1039/D2EW00653G,sludge_concentration,,6,8,,g/L,full_scale_municipal_AGS,Institutional_abstract,published_summary
+6,2,10.1039/D2EW00653G,granules_above_2mm,,50,80,,percent,full_scale_municipal_AGS,Institutional_abstract,published_summary
+7,2,10.1039/D2EW00653G,SVI30_over_SVI10,,0.9,1,,dimensionless,full_scale_municipal_AGS,Institutional_abstract,published_summary
