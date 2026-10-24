@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" role="img" aria-labelledby="title desc">
+<title id="title">Nitin Singh — Microbes, water, and reproducible research</title>
+<desc id="desc">A navy and teal research profile banner with abstract circles and a water-wave motif.</desc>
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#10283d"/><stop offset="1" stop-color="#0c4c56"/></linearGradient><linearGradient id="wave"><stop stop-color="#1b8a91"/><stop offset="1" stop-color="#81dfb3"/></linearGradient></defs>
+<rect width="1200" height="320" rx="24" fill="url(#bg)"/>
+<g fill="none" stroke="#79d8ce" stroke-opacity=".22"><circle cx="1000" cy="80" r="120"/><circle cx="1000" cy="80" r="155"/><path d="M850 60L970 130 1085 65 1140 180M970 130L1020 230"/></g>
+<g fill="#87dfbc"><circle cx="850" cy="60" r="9"/><circle cx="970" cy="130" r="14"/><circle cx="1085" cy="65" r="8"/><circle cx="1140" cy="180" r="12"/><circle cx="1020" cy="230" r="8"/></g>
+<text x="64" y="66" fill="#8de4c2" font-family="Arial,sans-serif" font-size="14" font-weight="bold" letter-spacing="3">MICROBIOLOGY / ENVIRONMENTAL BIOTECHNOLOGY</text>
+<text x="60" y="145" fill="#fff" font-family="Arial,sans-serif" font-size="64" font-weight="bold">Nitin Singh</text>
+<text x="64" y="197" fill="#d5e9eb" font-family="Arial,sans-serif" font-size="25">Microbes. Cleaner water. Reproducible research.</text>
+<text x="64" y="239" fill="#a6c9cf" font-family="Arial,sans-serif" font-size="17">Student researcher exploring bacterial wastewater treatment and Python analysis</text>
+<path d="M0 292Q150 258 300 290T600 288T900 290T1200 276V320H0Z" fill="url(#wave)" opacity=".65"/>
+</svg>
